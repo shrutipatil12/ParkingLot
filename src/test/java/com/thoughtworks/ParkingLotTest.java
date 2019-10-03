@@ -8,32 +8,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ParkingLotTest {
 
     @Test
-    void givenParkingLotWithZeroCapacity_WhenWePark_ThenShouldNotBeAbleToPark() throws Exception {
+    void givenParkingLotWithOneCapacity_WhenWePark_ThenShouldBeAbleToPark() throws ParkingLotException {
         ParkingLot parkingLot = new ParkingLot(1);
+
         Object object1 = new Object();
         assertTrue(parkingLot.park(object1));
     }
 
 
     @Test
-    void givenParkingLotWithSameObject_WhenWePark_ThenShouldThrowException() throws Exception {
+    void givenParkingLotWithSameObject_WhenWePark_ThenShouldThrowException() throws ParkingLotException {
         ParkingLot parkingLot = new ParkingLot(1);
-        Object vehical = new Object();
+        Object vehicle = new Object();
 
-        assertTrue(parkingLot.park(vehical));
-        Exception msg = Assertions.assertThrows(Exception.class, () -> {
-            parkingLot.park(vehical);
+        assertTrue(parkingLot.park(vehicle));
+        Assertions.assertThrows(ParkingLotException.class, () -> {
+            parkingLot.park(vehicle);
         });
     }
 
     @Test
-    void givenParkingLotWithFullcapacity_WhenPark_ThenShouldNotBeAbleToPark() throws Exception {
+    void givenParkingLotWithFullcapacity_WhenPark_ThenShouldNotBeAbleToPark() throws ParkingLotException {
         ParkingLot parkingLot = new ParkingLot(1);
-        Object vehical = new Object();
 
-        assertTrue(parkingLot.park(vehical));
-        Exception msg = Assertions.assertThrows(Exception.class, () -> {
-            parkingLot.park(vehical);
+        Object vehicle = new Object();
+        assertTrue(parkingLot.park(vehicle));
+
+        Assertions.assertThrows(ParkingLotException.class, () -> {
+            parkingLot.park(vehicle);
         });
     }
 

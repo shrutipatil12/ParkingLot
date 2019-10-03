@@ -13,16 +13,24 @@ public class ParkingLot {
         parkObject = new ArrayList<>();
     }
 
-    public boolean park(Object object) throws Exception {
+    public boolean park(Object object) throws ParkingLotException {
 
-        if (parkObject.size() <= capacity) {
-            if (parkObject.contains(object)) {
-                throw new Exception("Already contains vehical");
+        if (isAlreadyFull()) {
+            if (isAlreadyParked(object)) {
+                throw new ParkingLotException("Vehical is already parked");
             }
             parkObject.add(object);
             return true;
         }
-        throw new Exception("Already Full");
+        throw new ParkingLotException(" is Already Full");
+    }
+
+    private boolean isAlreadyParked(Object object) {
+        return parkObject.contains(object);
+    }
+
+    private boolean isAlreadyFull() {
+        return parkObject.size() < capacity;
     }
 
 }
