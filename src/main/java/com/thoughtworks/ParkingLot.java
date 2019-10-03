@@ -10,9 +10,14 @@ public class ParkingLot {
     }
 
     public boolean park(Object object) {
+        if (capacity == 0) {
+            return false;
+        }
         return true;
-
     }
 
+
 }
+
+
 
