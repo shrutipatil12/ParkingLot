@@ -39,4 +39,14 @@ class ParkingLotTest {
         });
     }
 
+    @Test
+    void givenParkingLotWithOneCapacity_WhenParkOneVehicleAndUnParkIt_ThenShouldBeAbleToUnParkIt() throws ParkingLotException {
+        ParkingLot parkingLot = new ParkingLot(1);
+
+        Object vehicle = new Object();
+        parkingLot.park(vehicle);
+
+        assertTrue(parkingLot.unPark(vehicle));
+    }
+
 }

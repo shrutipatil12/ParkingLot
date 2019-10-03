@@ -17,12 +17,12 @@ public class ParkingLot {
 
         if (isAlreadyFull()) {
             if (isAlreadyParked(object)) {
-                throw new ParkingLotException("Vehical is already parked");
+                throw new ParkingLotException("Vehical already parked");
             }
             parkObject.add(object);
             return true;
         }
-        throw new ParkingLotException(" is Already Full");
+        throw new ParkingLotException("Parking lot full");
     }
 
     private boolean isAlreadyParked(Object object) {
@@ -31,6 +31,13 @@ public class ParkingLot {
 
     private boolean isAlreadyFull() {
         return parkObject.size() < capacity;
+    }
+
+    public boolean unPark(Object object) {
+        if (isAlreadyParked(object)) {
+            return parkObject.remove(object);
+        }
+        return false;
     }
 
 }
