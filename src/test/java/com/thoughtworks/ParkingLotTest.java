@@ -3,6 +3,7 @@ package com.thoughtworks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ParkingLotTest {
@@ -47,6 +48,15 @@ class ParkingLotTest {
         parkingLot.park(vehicle);
 
         assertTrue(parkingLot.unPark(vehicle));
+    }
+
+    @Test
+    void givenParkingLotWithOneCapacity_WhenUnParkOneVehicleWithoutPark_ThenShouldNotBeAbleToUnParkIt() {
+        ParkingLot parkingLot = new ParkingLot(1);
+
+        Object vehicle = new Object();
+
+        assertFalse(parkingLot.unPark(vehicle));
     }
 
 }
