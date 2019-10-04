@@ -1,12 +1,13 @@
 package com.thoughtworks.Consumer;
 
+import com.thoughtworks.Owner;
 import com.thoughtworks.ParkingLot;
-import com.thoughtworks.ParkingLotException;
+import com.thoughtworks.ParkingLotIsFullException;
 import com.thoughtworks.VehicleAlreadyParkedException;
 
 public class Sanjay {
 
-    public static void park(ParkingLot parkingLotOne, ParkingLot parkingLotTwo) throws ParkingLotException, VehicleAlreadyParkedException {
+    public static void park(ParkingLot parkingLotOne, ParkingLot parkingLotTwo) throws ParkingLotIsFullException, VehicleAlreadyParkedException {
 
         try {
             System.out.println("park to parkingLotOne");
@@ -15,7 +16,7 @@ public class Sanjay {
             parkingLotOne.park(A);
             parkingLotOne.park(A);
 
-        } catch (ParkingLotException e) {
+        } catch (ParkingLotIsFullException e) {
             System.out.println("exception  " + e.getMessage());
         }
 
@@ -29,7 +30,7 @@ public class Sanjay {
             parkingLotOne.park(A);
             parkingLotOne.park(B);
             parkingLotOne.park(C);
-        } catch (ParkingLotException e) {
+        } catch (ParkingLotIsFullException e) {
             System.out.println("exception  " + e.getMessage());
 
         }
@@ -43,8 +44,8 @@ public class Sanjay {
 
     }
 
-    public static void main(String[] args) throws ParkingLotException, VehicleAlreadyParkedException {
-
-        park(new ParkingLot(2), new ParkingLot(3));
+    public static void main(String[] args) throws ParkingLotIsFullException, VehicleAlreadyParkedException {
+        Owner owner = new Owner();
+        park(new ParkingLot(2, owner), new ParkingLot(3, owner));
     }
 }

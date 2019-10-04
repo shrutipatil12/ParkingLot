@@ -3,26 +3,30 @@ package com.thoughtworks;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParkingLot {
+public class ParkingLot extends Owner {
 
-    private List<Object> parkObject;
+    private List<Object> parkObject = new ArrayList<>();
     private int capacity;
+    private Owner owner;
+    int count = 0;
 
-    public ParkingLot(int capacity) {
+    public ParkingLot(int capacity, Owner owner) {
         this.capacity = capacity;
-        parkObject = new ArrayList<>();
+        this.owner = owner;
     }
 
-    public boolean park(Object object) throws ParkingLotException, VehicleAlreadyParkedException {
+    public boolean park(Object object) throws ParkingLotIsFullException, VehicleAlreadyParkedException {
 
         if (isAlreadyFull()) {
             if (isAlreadyParked(object)) {
-                throw new VehicleAlreadyParkedException("Vehical already parked");
+                throw new VehicleAlreadyParkedException();
             }
             parkObject.add(object);
+            this.informIfCapacityFull();
+
             return true;
         }
-        throw new ParkingLotException("Parking lot full");
+        throw new ParkingLotIsFullException();
     }
 
     private boolean isAlreadyParked(Object object) {
@@ -38,9 +42,15 @@ public class ParkingLot {
             parkObject.remove(object);
             return object;
         }
-        throw new VehicleNotParkedException("Vehicle Not available");
+        throw new VehicleNotParkedException();
     }
 
+    private void informIfCapacityFull() {
+        if (parkObject.size() == capacity) {
+            owner.inform();
+        }
+
+    }
 }
 
 
