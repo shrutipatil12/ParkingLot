@@ -2,7 +2,15 @@ package com.thoughtworks;
 
 public class Owner {
 
-    public void inform() {
+
+    public void informParkingLotIsNowAvailable() {
+
 
     }
+
+    public void informParkingLotFull() {
+
+    }
+
+
 }

@@ -7,15 +7,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DummyOwner extends Owner {
     boolean wasCalled = false;
-    int numberOfTimesInform = 0;
+    int parkingLotAvailable = 0;
+    int parkingLotFull = 0;
+
 
     @Override
-    public void inform() {
-
+    public void informParkingLotIsNowAvailable() {
         wasCalled = true;
-        numberOfTimesInform++;
+        parkingLotAvailable++;
 
+    }
 
+    @Override
+    public void informParkingLotFull() {
+        wasCalled = true;
+        parkingLotFull++;
     }
 }
 
@@ -105,11 +111,28 @@ class ParkingLotTest {
 
         Object vehicleOne = new Object();
         parkingLot.park(vehicleOne);
+
         Object vehicleTwo = new Object();
         parkingLot.park(vehicleTwo);
 
-        assertEquals(1, owner.numberOfTimesInform);
+        assertEquals(1, owner.parkingLotFull);
 
     }
 
+    @Test
+    void givenParkingLotWithTwoCapacity_WhenParkedAndUnParked_ThenShouldReturnCountOfNotification() throws ParkingLotIsFullException, VehicleAlreadyParkedException, VehicleNotParkedException {
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
+        Object vehicleOne = new Object();
+        Object vehicleTwo = new Object();
+
+        parkingLot.park(vehicleOne);
+        parkingLot.park(vehicleTwo);
+        assertEquals(1, owner.parkingLotFull);
+
+        parkingLot.unPark(vehicleOne);
+
+        assertEquals(1, owner.parkingLotAvailable);
+
+    }
 }

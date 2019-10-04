@@ -8,7 +8,6 @@ public class ParkingLot extends Owner {
     private List<Object> parkObject = new ArrayList<>();
     private int capacity;
     private Owner owner;
-    int count = 0;
 
     public ParkingLot(int capacity, Owner owner) {
         this.capacity = capacity;
@@ -22,7 +21,7 @@ public class ParkingLot extends Owner {
                 throw new VehicleAlreadyParkedException();
             }
             parkObject.add(object);
-            this.informIfCapacityFull();
+            this.informIfCapacityFull(); // Inform parking lot is full
 
             return true;
         }
@@ -33,6 +32,7 @@ public class ParkingLot extends Owner {
         return parkObject.contains(object);
     }
 
+
     private boolean isAlreadyFull() {
         return parkObject.size() < capacity;
     }
@@ -40,6 +40,9 @@ public class ParkingLot extends Owner {
     public Object unPark(Object object) throws VehicleNotParkedException {
         if (isAlreadyParked(object)) {
             parkObject.remove(object);
+            if (parkObject.size() == capacity - 1) {
+                owner.informParkingLotIsNowAvailable(); // inform parking lot is available again
+            }
             return object;
         }
         throw new VehicleNotParkedException();
@@ -47,7 +50,7 @@ public class ParkingLot extends Owner {
 
     private void informIfCapacityFull() {
         if (parkObject.size() == capacity) {
-            owner.inform();
+            owner.informParkingLotFull();
         }
 
     }
