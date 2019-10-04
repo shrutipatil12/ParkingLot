@@ -2,10 +2,11 @@ package com.thoughtworks.Consumer;
 
 import com.thoughtworks.ParkingLot;
 import com.thoughtworks.ParkingLotException;
+import com.thoughtworks.VehicleAlreadyParkedException;
 
 public class Sanjay {
 
-    public static void park(ParkingLot parkingLotOne, ParkingLot parkingLotTwo) throws ParkingLotException {
+    public static void park(ParkingLot parkingLotOne, ParkingLot parkingLotTwo) throws ParkingLotException, VehicleAlreadyParkedException {
 
         try {
             System.out.println("park to parkingLotOne");
@@ -42,7 +43,7 @@ public class Sanjay {
 
     }
 
-    public static void main(String[] args) throws ParkingLotException {
+    public static void main(String[] args) throws ParkingLotException, VehicleAlreadyParkedException {
 
         park(new ParkingLot(2), new ParkingLot(3));
     }

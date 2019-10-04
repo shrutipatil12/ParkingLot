@@ -13,11 +13,11 @@ public class ParkingLot {
         parkObject = new ArrayList<>();
     }
 
-    public boolean park(Object object) throws ParkingLotException {
+    public boolean park(Object object) throws ParkingLotException, VehicleAlreadyParkedException {
 
         if (isAlreadyFull()) {
             if (isAlreadyParked(object)) {
-                throw new ParkingLotException("Vehical already parked");
+                throw new VehicleAlreadyParkedException("Vehical already parked");
             }
             parkObject.add(object);
             return true;
@@ -33,11 +33,12 @@ public class ParkingLot {
         return parkObject.size() < capacity;
     }
 
-    public boolean unPark(Object object) {
+    public Object unPark(Object object) throws VehicleNotParkedException {
         if (isAlreadyParked(object)) {
-            return parkObject.remove(object);
+            parkObject.remove(object);
+            return object;
         }
-        return false;
+        throw new VehicleNotParkedException("Vehicle Not available");
     }
 
 }
