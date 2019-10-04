@@ -7,11 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DummyOwner extends Owner {
     boolean wasCalled = false;
+    int numberOfTimesInform = 0;
 
     @Override
     public void inform() {
-        super.inform();
+
         wasCalled = true;
+        numberOfTimesInform++;
+
+
     }
 }
 
@@ -88,12 +92,24 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(1, owner);
 
         Object vehicleOne = new Object();
-
         parkingLot.park(vehicleOne);
 
         assertTrue(owner.wasCalled);
 
     }
 
+    @Test
+    void givenParkingLot_WhenGetFull_ThenShouldAbleToInformOneTime() throws ParkingLotIsFullException, VehicleAlreadyParkedException {
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
+
+        Object vehicleOne = new Object();
+        parkingLot.park(vehicleOne);
+        Object vehicleTwo = new Object();
+        parkingLot.park(vehicleTwo);
+
+        assertEquals(1, owner.numberOfTimesInform);
+
+    }
 
 }
