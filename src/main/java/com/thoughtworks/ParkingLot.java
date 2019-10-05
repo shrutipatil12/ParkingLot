@@ -10,15 +10,13 @@ import java.util.List;
 public class ParkingLot {
 
     private List<Object> parkedObjects = new ArrayList<>();
+    private List<Subscriber> subscriber;
     private int capacity;
-    private IOwner owner;
-    private IOwner securityGuard;
 
-    // TODO - list -> 0 in that list. 1. 2.
-    public ParkingLot(int capacity, IOwner owner, IOwner securityGuard) {
+
+    public ParkingLot(int capacity, List<Subscriber> subscribers) {
         this.capacity = capacity;
-        this.owner = owner;
-        this.securityGuard = securityGuard;
+        this.subscriber = subscribers;
     }
 
     public void park(Object object) throws ParkingLotIsFullException, VehicleAlreadyParkedException {
@@ -29,15 +27,15 @@ public class ParkingLot {
         if (isSpaceAvailable()) {
             parkedObjects.add(object);
             if (isCapacityFull()) {
-                owner.informParkingLotFull();
-                securityGuard.informParkingLotFull();
+                for (Subscriber subscriber : this.subscriber) {
+                    subscriber.informParkingLotFull();
+                }
             }
         }
         if (parkedObjects.size() > capacity) {
             throw new ParkingLotIsFullException();
         }
     }
-
 
     private boolean isAlreadyParked(Object object) {
         return parkedObjects.contains(object);
@@ -50,24 +48,22 @@ public class ParkingLot {
     public Object unPark(Object object) throws VehicleNotParkedException {
         if (isAlreadyParked(object)) {
             parkedObjects.remove(object);
-            if (parkedObjects.size() == capacity - 1) {
-
-                owner.informParkingLotIsNowAvailable();
-                securityGuard.informParkingLotIsNowAvailable();
-
+            if (isParkingLotAvailableAgain()) {
+                for (Subscriber subscriber : subscriber) {
+                    subscriber.informParkingLotIsNowAvailable();
+                }
             }
             return object;
         }
         throw new VehicleNotParkedException();
     }
 
-    public boolean isCapacityFull() {
+    private boolean isParkingLotAvailableAgain() {
+        return parkedObjects.size() == capacity - 1;
+    }
+
+    private boolean isCapacityFull() {
         return parkedObjects.size() == capacity;
     }
 
 }
-
-
-
-
-

@@ -1,6 +1,6 @@
 package com.thoughtworks;
 
-public interface IOwner { // TODO - name
+public interface Subscriber {
     void informParkingLotIsNowAvailable();
 
     void informParkingLotFull();
