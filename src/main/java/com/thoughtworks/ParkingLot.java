@@ -9,16 +9,12 @@ import java.util.List;
 
 public class ParkingLot {
 
-    private List<Object> parkObject = new ArrayList<>();
+    private List<Object> parkedObjects = new ArrayList<>();
     private int capacity;
     private IOwner owner;
     private IOwner securityGuard;
 
-    public ParkingLot(int capacity, IOwner owner) {
-        this.capacity = capacity;
-        this.owner = owner;
-    }
-
+    // TODO - list -> 0 in that list. 1. 2.
     public ParkingLot(int capacity, IOwner owner, IOwner securityGuard) {
         this.capacity = capacity;
         this.owner = owner;
@@ -26,44 +22,49 @@ public class ParkingLot {
     }
 
     public void park(Object object) throws ParkingLotIsFullException, VehicleAlreadyParkedException {
+        if (isAlreadyParked(object)) {
+            throw new VehicleAlreadyParkedException();
+        }
 
         if (isSpaceAvailable()) {
-            if (isAlreadyParked(object)) {
-                throw new VehicleAlreadyParkedException();
+            parkedObjects.add(object);
+            if (isCapacityFull()) {
+                owner.informParkingLotFull();
+                securityGuard.informParkingLotFull();
             }
-            parkObject.add(object);
-            this.informIfCapacityFull(); // Inform parking lot is full
-        } else {
+        }
+        if (parkedObjects.size() > capacity) {
             throw new ParkingLotIsFullException();
         }
     }
 
+
     private boolean isAlreadyParked(Object object) {
-        return parkObject.contains(object);
+        return parkedObjects.contains(object);
     }
 
     private boolean isSpaceAvailable() {
-        return parkObject.size() < capacity;
+        return parkedObjects.size() <= capacity;
     }
 
     public Object unPark(Object object) throws VehicleNotParkedException {
         if (isAlreadyParked(object)) {
-            parkObject.remove(object);
-            if (parkObject.size() == capacity - 1) {
-                owner.informParkingLotIsNowAvailable(); // inform parking lot is available again
+            parkedObjects.remove(object);
+            if (parkedObjects.size() == capacity - 1) {
+
+                owner.informParkingLotIsNowAvailable();
                 securityGuard.informParkingLotIsNowAvailable();
+
             }
             return object;
         }
         throw new VehicleNotParkedException();
     }
 
-    private void informIfCapacityFull() {
-        if (parkObject.size() == capacity) {
-            owner.informParkingLotFull();
-            securityGuard.informParkingLotFull();
-        }
+    public boolean isCapacityFull() {
+        return parkedObjects.size() == capacity;
     }
+
 }
 
 

@@ -48,7 +48,8 @@ class ParkingLotTest {
     void givenParkingLotWithOneCapacity_WhenWePark_ThenShouldBeAbleToPark() {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(1, owner, securityGuard);
 
         Object object1 = new Object();
         assertDoesNotThrow(() -> parkingLot.park(object1));
@@ -59,20 +60,22 @@ class ParkingLotTest {
     void givenParkingLotWithFullCapacity_WhenPark_ThenShouldNotBeAbleToPark() throws Exception {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(1, owner, securityGuard);
 
         Object vehicle = new Object();
         parkingLot.park(vehicle);
 
         Assertions.assertThrows(ParkingLotIsFullException.class, () -> {
-            parkingLot.park(vehicle);
+            parkingLot.park(new Object());
         });
     }
 
     @Test
     void givenParkingLotWithOneCapacity_WhenParkOneVehicleAndUnParkIt_ThenShouldBeAbleToUnParkIt() throws Exception {
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(1, owner, securityGuard);
 
         Object vehicle = new Object();
         parkingLot.park(vehicle);
@@ -84,7 +87,8 @@ class ParkingLotTest {
     void givenParkingLotWithOneCapacity_WhenUnParkOneVehicleWithoutPark_ThenShouldNotBeAbleToUnParkIt() {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(1, owner, securityGuard);
 
         Object vehicle = new Object();
 
@@ -97,7 +101,8 @@ class ParkingLotTest {
     void givenParkingLotWithTwoCapacity_WhenParkTwoVehicleAndUnPark_ThenShouldBeAbleToUnPark() throws Exception {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(2, owner, securityGuard);
 
         Object vehicleOne = new Object();
         Object vehicleTwo = new Object();
@@ -113,7 +118,8 @@ class ParkingLotTest {
     void givenParkingLot_WhenGetFull_ThenShouldAbleToInform() throws Exception {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(1, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(1, owner, securityGuard);
 
         Object vehicleOne = new Object();
         parkingLot.park(vehicleOne);
@@ -126,7 +132,8 @@ class ParkingLotTest {
     void givenParkingLot_WhenGetFull_ThenShouldAbleToInformOneTime() throws Exception {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(2, owner, securityGuard);
 
         Object vehicleOne = new Object();
         parkingLot.park(vehicleOne);
@@ -142,7 +149,8 @@ class ParkingLotTest {
     void givenParkingLot_WhenParkingLotFirstBecomesFullAndThenBecomesAvailable_ThenOwnerShouldGetBothNotifications() throws Exception {
 
         DummyOwner owner = new DummyOwner();
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        DummySecurity securityGuard = new DummySecurity();
+        ParkingLot parkingLot = new ParkingLot(2, owner, securityGuard);
 
         Object vehicleOne = new Object();
         Object vehicleTwo = new Object();
