@@ -1,9 +1,8 @@
 package com.thoughtworks.Consumer;
 
-import com.thoughtworks.Owner;
+import com.thoughtworks.Exception.ParkingLotIsFullException;
+import com.thoughtworks.Exception.VehicleAlreadyParkedException;
 import com.thoughtworks.ParkingLot;
-import com.thoughtworks.ParkingLotIsFullException;
-import com.thoughtworks.VehicleAlreadyParkedException;
 
 public class Sanjay {
 
@@ -45,7 +44,7 @@ public class Sanjay {
     }
 
     public static void main(String[] args) throws ParkingLotIsFullException, VehicleAlreadyParkedException {
-        Owner owner = new Owner();
-        park(new ParkingLot(2, owner), new ParkingLot(3, owner));
+//        Owner owner = new Owner();
+//        park(new ParkingLot(2, owner), new ParkingLot(3, owner));
     }
 }

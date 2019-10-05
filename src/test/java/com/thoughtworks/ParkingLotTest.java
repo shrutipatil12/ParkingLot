@@ -1,11 +1,31 @@
 package com.thoughtworks;
 
+import com.thoughtworks.Exception.ParkingLotIsFullException;
+import com.thoughtworks.Exception.VehicleNotParkedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DummyOwner extends Owner {
+class DummyOwner implements IOwner {
+    int parkingLotAvailable = 0;
+    int parkingLotFull = 0;
+
+
+    @Override
+    public void informParkingLotIsNowAvailable() {
+        parkingLotAvailable++;
+
+    }
+
+    @Override
+    public void informParkingLotFull() {
+        parkingLotFull++;
+    }
+}
+
+class DummySecurity implements IOwner {
     int parkingLotAvailable = 0;
     int parkingLotFull = 0;
 
@@ -25,10 +45,10 @@ class DummyOwner extends Owner {
 
 class ParkingLotTest {
     @Test
-    void givenParkingLotWithOneCapacity_WhenWePark_ThenShouldBeAbleToPark() throws Exception {
+    void givenParkingLotWithOneCapacity_WhenWePark_ThenShouldBeAbleToPark() {
 
-        Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
 
         Object object1 = new Object();
         assertDoesNotThrow(() -> parkingLot.park(object1));
@@ -38,20 +58,20 @@ class ParkingLotTest {
     @Test
     void givenParkingLotWithFullCapacity_WhenPark_ThenShouldNotBeAbleToPark() throws Exception {
 
-        Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(2, owner);
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(1, owner);
 
         Object vehicle = new Object();
         parkingLot.park(vehicle);
 
-        Assertions.assertThrows(VehicleAlreadyParkedException.class, () -> {
+        Assertions.assertThrows(ParkingLotIsFullException.class, () -> {
             parkingLot.park(vehicle);
         });
     }
 
     @Test
     void givenParkingLotWithOneCapacity_WhenParkOneVehicleAndUnParkIt_ThenShouldBeAbleToUnParkIt() throws Exception {
-        Owner owner = new Owner();
+        DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
 
         Object vehicle = new Object();
@@ -63,7 +83,7 @@ class ParkingLotTest {
     @Test
     void givenParkingLotWithOneCapacity_WhenUnParkOneVehicleWithoutPark_ThenShouldNotBeAbleToUnParkIt() {
 
-        Owner owner = new Owner();
+        DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
 
         Object vehicle = new Object();
@@ -74,23 +94,24 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithTwoCapacity_WhenParkTwoVehicleAndUnParkSameVehicleTwoTimes_ThenShouldNotAbleToUnParkVehicle() throws Exception {
+    void givenParkingLotWithTwoCapacity_WhenParkTwoVehicleAndUnPark_ThenShouldBeAbleToUnPark() throws Exception {
 
-        Owner owner = new Owner();
-        ParkingLot parkingLot = new ParkingLot(3, owner);
+        DummyOwner owner = new DummyOwner();
+        ParkingLot parkingLot = new ParkingLot(2, owner);
 
         Object vehicleOne = new Object();
         Object vehicleTwo = new Object();
         parkingLot.park(vehicleOne);
         parkingLot.park(vehicleTwo);
 
-        assertNotEquals(vehicleTwo, parkingLot.unPark(vehicleOne));
+        assertEquals(vehicleOne, parkingLot.unPark(vehicleOne));
         assertEquals(vehicleTwo, parkingLot.unPark(vehicleTwo));
 
     }
 
     @Test
     void givenParkingLot_WhenGetFull_ThenShouldAbleToInform() throws Exception {
+
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(1, owner);
 
@@ -103,6 +124,7 @@ class ParkingLotTest {
 
     @Test
     void givenParkingLot_WhenGetFull_ThenShouldAbleToInformOneTime() throws Exception {
+
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(2, owner);
 
@@ -117,19 +139,40 @@ class ParkingLotTest {
     }
 
     @Test
-    void givenParkingLotWithTwoCapacity_WhenParkedAndUnParked_ThenShouldReturnCountOfNotification() throws Exception {
+    void givenParkingLot_WhenParkingLotFirstBecomesFullAndThenBecomesAvailable_ThenOwnerShouldGetBothNotifications() throws Exception {
+
         DummyOwner owner = new DummyOwner();
         ParkingLot parkingLot = new ParkingLot(2, owner);
+
+        Object vehicleOne = new Object();
+        Object vehicleTwo = new Object();
+        parkingLot.park(vehicleOne);
+        parkingLot.park(vehicleTwo);
+
+        assertEquals(1, owner.parkingLotFull);
+        parkingLot.unPark(vehicleOne);
+        assertEquals(1, owner.parkingLotAvailable);
+
+    }
+
+    @Test
+    void givenParkingLot_WhenParkingLotFirstBecomesFullAndThenBecomesAvailable_ThenOwnerAndSecurityGuardShouldGetBothNotifications() throws Exception {
+        DummyOwner owner = new DummyOwner();
+        DummySecurity securityGuard = new DummySecurity();
+
+        ParkingLot parkingLot = new ParkingLot(2, owner, securityGuard);
         Object vehicleOne = new Object();
         Object vehicleTwo = new Object();
 
         parkingLot.park(vehicleOne);
         parkingLot.park(vehicleTwo);
         assertEquals(1, owner.parkingLotFull);
+        assertEquals(1, securityGuard.parkingLotFull);
 
         parkingLot.unPark(vehicleOne);
 
         assertEquals(1, owner.parkingLotAvailable);
+        assertEquals(1, securityGuard.parkingLotAvailable);
 
     }
 }
